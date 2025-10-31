@@ -1,5 +1,6 @@
 import numpy as np
 import random as r
+import gymnasium as gym
 
 deck = ['A', 2, 3, 4, 5, 6, 7, 8, 9] + 4*[10]
 
@@ -51,8 +52,7 @@ class Player:
             
             if hand_value(self.hand) > 21:
                 self.turn == False
-
-        
+    
 def hand_value(hand):
     for card in hand:
 
