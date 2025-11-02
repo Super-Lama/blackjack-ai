@@ -1,69 +1,21 @@
-import numpy as np
-import random as r
-import gymnasium as gym
+from blackjack_env import BlackjackEnv
 
-deck = ['A', 2, 3, 4, 5, 6, 7, 8, 9] + 4*[10]
+env = BlackjackEnv
 
-class Player:
-    def __init__(self, name):
-        self.name = name
-        self.hand = []
+observation, info = env.reset()
 
-    def deal(self):
+print(observation, info)
 
-        self.hand = [r.choice(deck) for _ in range(2)]
+round_over = False
+total_reward = 0
 
-    def hit(self):
-        
-        card = r.choice(deck)
-        
-        self.hand.append(card)
+while not round_over:
+    action = int(input("Action? "))
 
-    def stand(self):
-        self.turn = False
-    
-    def split(self):
+    observation, reward, terminated, truncated, info = env.step(action)
 
-        if self.hand[0] == self.hand[1]:
-            hand_1 = [self.hand[0], self.hit()]
-            hand_2 = [self.hand[1], self.hit()]
-            self.hand = hand_1, hand_2
-        else:
-            return False
-        
-    def double(self):
-        if self.hand.len() > 2:
-            return False
-        else:
-            self.bet += self.bet
-        
-        self.turn = False
-    
-    def blackjack_round(self):
-        self.turn = True
+    total_reward += reward
+    episode_over = terminated or truncated
 
-        self.deal()
-
-        dealer_card = r.choice(deck)
-
-        while self.turn:
-
-
-            
-            if hand_value(self.hand) > 21:
-                self.turn == False
-    
-def hand_value(hand):
-    for card in hand:
-
-        if card == 'A':
-            value += 11
-            ace += 1
-        else:
-            value += card
-        
-    while value > 21 and ace > 0:
-        value -= 10
-        ace -= 1
-    
-    return value
+print(f"Round finished! Total reward: {total_reward}")
+env.close()

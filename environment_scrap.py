@@ -54,7 +54,6 @@ class BlackjackEnv(gym.Env):
         assert self.hands is not None and len(self.hands) > 0, "reset() not called"
         assert 0 <= self.active < len(self.hands), "invalid active hand index"
         current = self.hands[self.active]
-        current_hand = current["hand"]
 
         player_sum, player_hand_vec, usable_ace = self._encode_hand()
 
@@ -98,12 +97,13 @@ class BlackjackEnv(gym.Env):
         super().reset(seed=seed)
         if seed is not None:
             self.rng = np.random.default_rng(seed)
-        
-        self.hand = deal(self.rng)
 
-        self.hands = [
+        self.hand = [
             {"hand": deal(self.rng), "bet": 1, "doubled": False, "done": False }
         ]
+
+        self.hands = [self.hand]
+
         self.active = 0
 
         self.dealer = deal(self.rng)
