@@ -1,6 +1,6 @@
 from blackjack_env import BlackjackEnv
 
-env = BlackjackEnv
+env = BlackjackEnv()
 
 observation, info = env.reset()
 
@@ -14,8 +14,10 @@ while not round_over:
 
     observation, reward, terminated, truncated, info = env.step(action)
 
+    print(observation, info)
+
     total_reward += reward
-    episode_over = terminated or truncated
+    round_over = terminated or truncated
 
 print(f"Round finished! Total reward: {total_reward}")
 env.close()

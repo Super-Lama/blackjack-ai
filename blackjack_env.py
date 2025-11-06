@@ -2,7 +2,7 @@ import gymnasium as gym
 import numpy as np
 r = np.random
 
-deck = ['A', 2, 3, 4, 5, 6, 7, 8, 9] + 4*[10]
+deck = [11, 2, 3, 4, 5, 6, 7, 8, 9] + 4*[10]
 
 def deal():
     return [r.choice(deck), r.choice(deck)]
@@ -10,16 +10,17 @@ def deal():
 def draw(hand):
     hand.append(r.choice(deck))
 
-    return hand
-
 def hand_value(hand):
+    value = 0
+    ace = 0
+    
     for card in hand:
 
-        if card == 'A':
+        if card == 11:
             value += 11
             ace += 1
         else:
-            value += card
+            value += int(card)
         
     while value > 21 and ace > 0:
         value -= 10
@@ -48,6 +49,8 @@ class BlackjackEnv(gym.Env):
         super().__init__()
 
         self.hand = []
+        self.dealer_hand = []
+        self.bet = 1
 
         self.observation_space = gym.spaces.Dict(
             {
@@ -91,6 +94,7 @@ class BlackjackEnv(gym.Env):
 
         return {
             "hand": self.hand,
+            "dealer_hand": self.dealer_hand
         }
     
     def reset(self, seed=None):
@@ -121,11 +125,11 @@ class BlackjackEnv(gym.Env):
         
         self.action_dict[action]
 
-        if self.hand_value() > 21:
+        if hand_value(self.hand)[0] > 21:
             self.terminated = True
             reward = -self.bet
         elif self.terminated:
-            if hand_value(self.hand) > hand_value(self.dealer_hand) or hand_value(self.dealer_hand) > 21:
+            if hand_value(self.hand)[0] > hand_value(self.dealer_hand)[0] or hand_value(self.dealer_hand)[0] > 21:
                 reward = self.bet
             else:
                 reward = -self.bet
