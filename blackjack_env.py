@@ -64,9 +64,9 @@ class BlackjackEnv(gym.Env):
         self.action_space = gym.spaces.Discrete(3)
 
         self.action_dict = {
-            0: self.stand(),
-            1: self.hit(),
-            2: self.double(),
+            0: self.stand,
+            1: self.hit,
+            2: self.double,
         }
 
     def can_double(self):
@@ -112,6 +112,7 @@ class BlackjackEnv(gym.Env):
     
     def step(self, action):
         truncated = False
+        self.terminated = False
         reward = 0
 
         if self.can_double() == 0 and action == 2:
@@ -123,7 +124,7 @@ class BlackjackEnv(gym.Env):
 
             return observation, reward, self.terminated, truncated, info
         
-        self.action_dict[action]
+        self.action_dict[action]()
 
         if hand_value(self.hand)[0] > 21:
             self.terminated = True
@@ -139,4 +140,4 @@ class BlackjackEnv(gym.Env):
         info = self._get_info()
 
         return observation, reward, self.terminated, truncated, info
-
+    
